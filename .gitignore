@@ -1,0 +1,8 @@
+scripts/utils/make_fastqs.sh
+scripts/utils/._*
+figures/._*
+tables/._*
+metadata/.DS_Store
+metadata/._.DS_Store
+metadata/freezes/.DS_Store
+metadata/freezes/._.DS_Store
