@@ -3,7 +3,7 @@
 
 **objective: ...**
 
-**paths are relative to /users/GR/mb/jquilez/projects/didactic_dataset**
+**paths are relative to /users/GR/mb/jquilez/projects/parallel_sequencing_lives**
 
 
 # Project directory stucture

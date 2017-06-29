@@ -1,0 +1,2 @@
+test1	test1_read1.fastq.gz	test1_read2.fastq.gz
+test2	test2_read1.fastq.gz	test2_read2.fastq.gz

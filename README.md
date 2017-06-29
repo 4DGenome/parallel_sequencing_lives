@@ -18,17 +18,17 @@ In ["Parallel sequencing lives, or what makes large sequencing projects successf
 ## Installation and usage
 
 Download the entire repository with:
-```
+```bash
 git clone https://github.com/4DGenome/parallel_sequencing_lives.git
 ```
 
 In many of the scripts in [scripts](https://github.com/4DGenome/parallel_sequencing_lives/tree/master/scripts/) paths are relative to the `$PSL` Unix variable defined at the beginning of the script, which is set to `/users/GR/mb/jquilez/projects/parallel_sequencing_lives` (the absolute path to the repository directory in the machine where it was developed). As an example see:
-```
+```bash
 head -n 12 scripts/utils/check_sequencing_index_concordance.sh
 ```
 
 The scripts are written so that they can be executed from the directory where the repository is cloned by conveniently changing the `$PSL` value, which can be achieved for all scripts with:
-```
+```bash
 TARGET_DIR=my_home_directory
 for s in scripts/*/*.sh; do
 	IDIR='\/users\/GR\/mb\/jquilez\/projects\/parallel_sequencing_lives'
@@ -55,11 +55,11 @@ In [this table](https://github.com/4DGenome/parallel_sequencing_lives/blob/maste
 
 Below we provide a script to download the metadata in an [example online text file](https://zenodo.org/record/817549/files/metadata.tsv) and dump them into a SQL database:
 
-```
+```bash
 scripts/utils/io_metadata.sh -m download_input_metadata
 ```
 The `-m` command selects the mode. When `download_input_metadata` is passed, the metadata is downloaded from the corresponding URL and added the database. Note that 2 files are generated:
-```
+```bash
 metadata/metadata.db
 metadata/metadata.tsv
 ```
@@ -77,7 +77,7 @@ Below is the scheme of the metadata SQL database, each table with its name (top)
 ### Extract metadata
 
 Once the input metadata are stored in the SQL database, they can be accessed with:
-```
+```bash
 scripts/utils/io_metadata.sh -m get_from_metadata -s b1913e6c1_51720e9cf -t input_metadata -a CELL_TYPE
 scripts/utils/io_metadata.sh -m get_from_metadata -s b1913e6c1_51720e9cf -t input_metadata -a SEQUENCING_INDEX
 ```
@@ -128,14 +128,14 @@ This sanity check can be incorporated into the analysis pipelines so that a warn
 
 ## Sample identification
 
-As happened to `T47D_rep1` in our story, often sequencing samples and the associated files (e.g. FASTQ files) are identified with names that _describe_ the HTS experiment and/or are easy to remember for the person who performed it. However, this practice has several undesired consequences. Identical or similar identifiers referring to different HTS experiments as well as vague sample names, especially if there is no associated metadata, can preclude any analysis or lead to errors. Moreover, such unsystematic sample naming undermines the capability to process samples programmatically (e.g. search for data, parallelize scripts), which impairs automation and may also lead to errors.
+As happened to `T47D_rep2` in our story, often sequencing samples and the associated files (e.g. FASTQ files) are identified with names that _describe_ the HTS experiment and/or are easy to remember for the person who performed it. However, this practice has several undesired consequences. Identical or similar identifiers referring to different HTS experiments as well as vague sample names, especially if there is no associated metadata, can preclude any analysis or lead to errors. Moreover, such unsystematic sample naming undermines the capability to process samples programmatically (e.g. search for data, parallelize scripts), which impairs automation and may also lead to errors.
 
 Therefore, we established a system to generate unique sample identifiers (ID) in an automated manner based on a selection of fields from the metadata that uniquely points to a sequencing experiment. As illustrated below, two sets of either biological or technical fields that unequivocally defined a sequencing sample were identified. Then, for a given sample the values of the biological fields treated as text are concatenated and computationally digested into a 9-mer, and the same procedure is applied to the technical fields. The two 9-mers are combined to form the sample identifier (ID), as happened for b1913e6c1_51720e9cf. 
 
 ![sample_id_scheme](https://github.com/4DGenome/parallel_sequencing_lives/blob/master/figures/sample_id_scheme.png)
 
 For example, the sample ID values for the samples of the didactic dataset were generated with:
-```
+```bash
 scripts/utils/sample_id_generator.sh
 ```
 which prints:
@@ -159,20 +159,66 @@ While the specific fields used to generate the sample ID can vary, it is importa
 
 Collecting metadata and labelling HTS experiments efficiently is useless if data cannot be located. Unfortunately, we have observed that the raw and processed sequencing data as well as the results derived from them tend to be stored in a rather untidy fashion. Such situations may happen if files are stored without anticipating additional sequencing runs and analyses, processed and analysed on the fly or managed by several people with different or missing perceptions of organizing data (the latter is a frequent case when people leave and must be replaced). Difficulties to find data are aggravated by the existence of duplicated sample names and lack of recorded metadata.
 
-Alternatively, we suggest a structured and hierarchical organisation that reflects the way in which sequencing data are generated and analyzed. 
+Alternatively, we suggest a structured and hierarchical organisation that reflects the way in which sequencing data are generated and analyzed. First, **raw data** (i.e. FASTQ files) are processed sample-wise with relatively standard but tunable analysis pipelines (“core analysis pipelines” in the figure above) which generate a variety of directories and files. In a second step, **processed data** from one or more samples are combined to perform downstream analyses and produce the **analysis results**.
 
 ![stages_hts_data](https://github.com/4DGenome/parallel_sequencing_lives/blob/master/figures/stages_hts_data.png)
 
-
-### Raw data
-
-In general, experiments are sequenced in different multi-sample runs separated in time, so it is convenient storing the raw data from the sequencing samples grouped by the run in which they were generated. 
+Considering this, we propose the following considerations for storing the raw data, processed data and analysis results.
 
 
-Sequencing run directories can contain not only the FASTQ files with the sequencing reads but also information about their quality (e.g. FastQC [11] reports). Conversely, we discourage storing herein modified, subsetted or merged FASTQ files to ensure that analyses start off from the very same set of reads. 
+### (1) Raw data
+
+In general, experiments are sequenced in different multi-sample runs separated in time, so it is convenient storing the raw data from the sequencing samples grouped by the run in which they were generated:
+
+```bash
+tree -C -L 2 data/*/raw
+# -C colors directories and files differently
+# -L 2 only shows 2 levels of the tree for clarity
+```
+
+Dated run directories contain:
+- Compressed FASTQ files with the sequencing reads (`*fastq.gz`); note that FASTQ files contain the unique SAMPLE_ID and what read of the paired-end sequencing they contain (for single-end data, we find useful to still use `read1` for consistency)
+- information about their quality of the raw reads (e.g. [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) reports)
 
 
-### Analysis
+### (2) Processed data
+
+Allocate one directory for each sequencing sample:
+```
+ll data/hic/samples
+```
+
+Include subdirectories for the output of the different steps of the pipeline:
+```
+ll data/hic/samples/b1913e6c1_51720e9cf/plots/hg38_mmtv
+```
+
+Include subdirectories for the output of the logs of the programs used:
+```
+data/hic/samples/b1913e6c1_51720e9cf/logs/b1913e6c1_51720e9cf_trim_reads_trimmomatic_paired_end.log
+data/hic/samples/b1913e6c1_51720e9cf/logs/hg38_mmtv/b1913e6c1_51720e9cf_align_and_merge_paired_end.log
+```
+
+Include subdirectories for the file integrity verifications:
+```
+data/hic/samples/b1913e6c1_51720e9cf/checksums/hg38_mmtv/2017-06-29-15-24/files_checksums.sha
+```
+Everytime the Hi-C pipeline is run on `b1913e6c1_51720e9cf` a time stamped directory (`2017-06-29-15-24`) with a [SHA](https://en.wikipedia.org/wiki/Sha1sum) file is generated. 
+```
+9ea81ab473cde0bdaa660e06c1c1a07f0b40d2fb  /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/raw/2015-04-28/b1913e6c1_51720e9cf_read1.fastq
+bb631437d44e57643cd8d931ebdddde7a834db66  /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/raw/2015-04-28/b1913e6c1_51720e9cf_read2.fastq
+cff9077b44948ed7be700f5c1d9959f6ee390ceb  /users/GR/mb/jquilez/assemblies/homo_sapiens/hg38_mmtv/ucsc/hg38_mmtv_chr1-22XYM.fa
+c30f48fcdb6cd84d9c8da0d7515e5237b18a9e40  /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/samples/b1913e6c1_51720e9cf/results/hg38_mmtv/processed_reads/b1913e6c1_51720e9cf_both_map.tsv
+de317ed0e4ffe8ecb082b20600abb72ad5450c64  /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/samples/b1913e6c1_51720e9cf/results/hg38_mmtv/filtered_reads/b1913e6c1_51720e9cf_filtered_map.tsv
+2c0ab11c9ef7caafd1b3cc309cbe778dd100167d  /users/project/4DGenome/data/hic/samples/b1913e6c1_51720e9cf/results/hg38_mmtv/processed_reads/b1913e6c1_51720e9cf_both_map.bam.sam
+```
+
+As shown above, the `*.sha` file contains alphanumerical text strings associated to key files used in the pipeline (e.g. input FASTQs, genome reference sequece), which can be used to assess the integtity of such files.
+
+Note that many of the paths include `hg38_mmtv`. This not only is informative about the version of the human genome used to process the data but also allows to accommodate variations in the analysis pipelines without over-writting existing data. With the corresponding changes in the Hi-C pipeline, `b1913e6c1_51720e9cf` can be re-processed on `hg38` and the output of the pipeline will be stored in _parallel_ paths. This can be extended to other variables such as the aligner used, etc.
+
+
+### (3) Analysis results
 
 **Make project/user directory**
 
@@ -191,13 +237,18 @@ scripts/utils/make_analysis_directory.sh jquilez process_hic_samples
 ```
 which generates the directory:
 ```
-ll projects/jquilez/analysis/2017-06-28_process_hic_samples
+ll projects/jquilez/analysis/2017-06-29_process_hic_samples
 ```
 
 **Quality control of raw reads**
 
 scripts/utils/quality_control.sh
 
+
+Note that, as the number of types of HTS data (e.g. RNA-seq, ChIP-seq) and sequencing runs grow, this structured and hierarchical organisation facilitates human and computer searches. As a simple example, the following command would allow finding the quality control reports for all samples:
+```bash
+ll data/*/raw/*/*/*/fastqc_report.html
+```
 
 
 

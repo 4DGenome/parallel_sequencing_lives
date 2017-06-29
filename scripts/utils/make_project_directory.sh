@@ -8,14 +8,14 @@
 # Goal: makes project directory
 #==================================================================================================
 
-DD=/users/GR/mb/jquilez/projects/didactic_dataset
+PSL=/users/GR/mb/jquilez/projects/parallel_sequencing_lives
 
 # variables
 project=$1
 
 # check variables are passed as script parameters
 if [ -n "$project" ]; then
-	PROJECT=$DD/projects/$project
+	PROJECT=$PSL/projects/$project
 	if [ ! -d $PROJECT ]; then
 		# make directories
 		mkdir -p $PROJECT/{data,analysis}
@@ -25,7 +25,7 @@ if [ -n "$project" ]; then
 		echo "# $project" >> $md
 		echo `printf '%100s\n' | tr ' ' -` >> $md
 		echo -e "\n**objective: ...**" >> $md
-		echo -e "\n**paths are relative to $DD**\n\n" >> $md
+		echo -e "\n**paths are relative to $PSL**\n\n" >> $md
 		echo -e "\nproject directory created at $PROJECT\n"
 		echo "# Project directory stucture" >> $md
 		echo `printf '%100s\n' | tr ' ' -` >> $md

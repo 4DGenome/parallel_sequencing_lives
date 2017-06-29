@@ -1,0 +1,7 @@
+TrimmomaticPE: Started with arguments:
+ /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/raw/2015-04-28/dc3a1e069_ec92aa0bb_read1.fastq.gz /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/raw/2015-04-28/dc3a1e069_ec92aa0bb_read2.fastq.gz /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/samples/dc3a1e069_ec92aa0bb/fastqs_processed/trimmomatic/paired_end/dc3a1e069_ec92aa0bb_read1.fastq.gz /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/samples/dc3a1e069_ec92aa0bb/fastqs_processed/trimmomatic/unpaired_reads/dc3a1e069_ec92aa0bb_read1.fastq.gz /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/samples/dc3a1e069_ec92aa0bb/fastqs_processed/trimmomatic/paired_end/dc3a1e069_ec92aa0bb_read2.fastq.gz /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/samples/dc3a1e069_ec92aa0bb/fastqs_processed/trimmomatic/unpaired_reads/dc3a1e069_ec92aa0bb_read2.fastq.gz ILLUMINACLIP:/software/mb/el7.2/Trimmomatic-0.36/adapters/TruSeq3-PE.fa:2:30:12:1:true LEADING:3 TRAILING:3 MAXINFO:75:0.999 MINLEN:36
+Using PrefixPair: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT' and 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+ILLUMINACLIP: Using 1 prefix pairs, 0 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
+Quality encoding detected as phred33
+Input Read Pairs: 100 Both Surviving: 97 (97.00%) Forward Only Surviving: 0 (0.00%) Reverse Only Surviving: 0 (0.00%) Dropped: 3 (3.00%)
+TrimmomaticPE: Completed successfully

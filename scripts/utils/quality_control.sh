@@ -21,7 +21,7 @@
 # CONFIGURATION VARIABLES AND PATHS
 #==================================================================================================
 
-DD=/users/GR/mb/jquilez/projects/didactic_dataset
+PSL=/users/GR/mb/jquilez/projects/parallel_sequencing_lives
 
 # variables
 samples="dc3a1e069_51720e9cf b1913e6c1_51720e9cf dc3a1e069_ec92aa0bb b7fa2d8db_bfac48760"
@@ -36,10 +36,10 @@ data_type=
 sequencing_type=
 
 # paths
-io_metadata=$DD/scripts/utils/io_metadata.sh
+io_metadata=$PSL/scripts/utils/io_metadata.sh
 fastqc=`which fastqc`
 unzip=`which unzip`
-ANALYSIS=$DD/projects/$project/analysis/$analysis	
+ANALYSIS=$PSL/projects/$project/analysis/$analysis	
 JOB_CMD=$ANALYSIS/job_cmd
 JOB_OUT=$ANALYSIS/job_out
 mkdir -p $JOB_CMD
@@ -64,25 +64,24 @@ fi
 
 for s in $samples; do
 
-	# release date, data type and sequencing type
-	echo "$io_metadata -m get_from_metadata -s $s -t input_metadata -a SEND_FOR_SEQUENCING_ON"
-	#release_date_raw=`$io_metadata -m get_from_metadata -s $s -t input_metadata -a SEND_FOR_SEQUENCING_ON`
-	#echo $release_date_raw
-	#month=`echo $release_date_raw |cut -f1 -d'/'`
-	#day=`echo $release_date_raw |cut -f2 -d'/'`
-	#yyyy=`echo $release_date_raw |cut -f3 -d'/'`
+	# release date
+	ifq1=/users/project/4DGenome/sequencing/*/${s}_read1.fastq.gz
+	release_date=`echo $ifq1 |cut -d'/' -f6`
+	ODIR=$PSL/data/hic/raw/$release_date
 
-	exit
+	# data type
 	data_type_raw=`$io_metadata -m get_from_metadata -s $s -t input_metadata -a APPLICATION`
 	if [[ $data_type_raw == "INHIC" ]]; then
 		data_type='hic'
 	else
 		data_type=`echo ${data_type_raw,,} |sed 's/-//g'`
 	fi
+
+	# sequencing type
 	sequencing_type=`$io_metadata -m get_from_metadata -s $s -t input_metadata -a SEQUENCING_TYPE`
 
 	# paths
-	IODIR=$DD/data/$data_type/raw/$release_date
+	IODIR=$PSL/data/$data_type/raw/$release_date
 	FASTQC=$IODIR/fastqc
 	mkdir -p $FASTQC
 

@@ -1,0 +1,6 @@
+9ea81ab473cde0bdaa660e06c1c1a07f0b40d2fb  /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/raw/2015-04-28/b1913e6c1_51720e9cf_read1.fastq
+bb631437d44e57643cd8d931ebdddde7a834db66  /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/raw/2015-04-28/b1913e6c1_51720e9cf_read2.fastq
+cff9077b44948ed7be700f5c1d9959f6ee390ceb  /users/GR/mb/jquilez/assemblies/homo_sapiens/hg38_mmtv/ucsc/hg38_mmtv_chr1-22XYM.fa
+c30f48fcdb6cd84d9c8da0d7515e5237b18a9e40  /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/samples/b1913e6c1_51720e9cf/results/hg38_mmtv/processed_reads/b1913e6c1_51720e9cf_both_map.tsv
+de317ed0e4ffe8ecb082b20600abb72ad5450c64  /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/samples/b1913e6c1_51720e9cf/results/hg38_mmtv/filtered_reads/b1913e6c1_51720e9cf_filtered_map.tsv
+2c0ab11c9ef7caafd1b3cc309cbe778dd100167d  /users/project/4DGenome/data/hic/samples/b1913e6c1_51720e9cf/results/hg38_mmtv/processed_reads/b1913e6c1_51720e9cf_both_map.bam.sam
