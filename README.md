@@ -215,40 +215,31 @@ de317ed0e4ffe8ecb082b20600abb72ad5450c64  /users/GR/mb/jquilez/projects/parallel
 
 As shown above, the `*.sha` file contains alphanumerical text strings associated to key files used in the pipeline (e.g. input FASTQs, genome reference sequece), which can be used to assess the integtity of such files.
 
-Note that many of the paths include `hg38_mmtv`. This not only is informative about the version of the human genome used to process the data but also allows to accommodate variations in the analysis pipelines without over-writting existing data. With the corresponding changes in the Hi-C pipeline, `b1913e6c1_51720e9cf` can be re-processed on `hg38` and the output of the pipeline will be stored in _parallel_ paths. This can be extended to other variables such as the aligner used, etc.
+Note that many of the paths include `hg38_mmtv`. This not only is informative about the version of the human genome used to process the data but also allows to accommodate variations in the analysis pipelines without over-writting existing data. With the corresponding changes in the Hi-C pipeline, `b1913e6c1_51720e9cf` can be re-processed on `hg19` and the output of the pipeline will be stored in _parallel_ paths. This can be extended to other variables such as the aligner used, etc.
 
 
 ### (3) Analysis results
 
-**Make project/user directory**
+Finding effortlessly what, when and how data are processed is crucial.
 
-```
+When one has to perform an analysis some basic questions arise: for what/who is it? what, when and who is it done?
+
+Firstly, we found convenient allocating a directory for each of the users who requests an analysis, especially when there are many of them. While saving the downstream analyses grouped by projects is also a sensible option, this may be straightforward only for analyses under the umbrella of a well-defined broad project. Moreover, very often the name initially given to a project when its directory is created may become imprecise as the project evolves, analyses are unrelated to any existing project or a given analysis is used in many projects.
+
+For instance, all the analyses generated for the [manuscript]()~~link to manuscript~~ and the didactic dataset are allocated in the `projects/jquilez/analysis` directory, which was generated with:
+```bash
 scripts/utils/make_project_directory.sh jquilez
 ```
-which generates the directory:
+
+Each of the analyses is named with a timestamp (which allows chronological sorting of the analyses) plus a descriptive tag from a controlled vocabulary (e.g. "process_hic_samples")
 ```
-ll projects/jquilez/
+projects/jquilez/analysis/2017-04-07_analyses_manuscript
+projects/jquilez/analysis/2017-06-29_process_hic_samples
 ```
 
-**Make analysis directory***
+And each of the analysis directories includes well-defined subdirectories for data, figures, scripts, etc.
 
-```
-scripts/utils/make_analysis_directory.sh jquilez process_hic_samples
-```
-which generates the directory:
-```
-ll projects/jquilez/analysis/2017-06-29_process_hic_samples
-```
-
-**Quality control of raw reads**
-
-scripts/utils/quality_control.sh
-
-
-Note that, as the number of types of HTS data (e.g. RNA-seq, ChIP-seq) and sequencing runs grow, this structured and hierarchical organisation facilitates human and computer searches. As a simple example, the following command would allow finding the quality control reports for all samples:
-```bash
-ll data/*/raw/*/*/*/fastqc_report.html
-```
+Importantly, this structured and hierarchical organisation of the data facilitates both humand and computer searches.
 
 
 
