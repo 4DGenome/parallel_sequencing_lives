@@ -159,7 +159,7 @@ While the specific fields used to generate the sample ID can vary, it is importa
 
 Collecting metadata and labelling HTS experiments efficiently is useless if data cannot be located. Unfortunately, we have observed that the raw and processed sequencing data as well as the results derived from them tend to be stored in a rather untidy fashion. Such situations may happen if files are stored without anticipating additional sequencing runs and analyses, processed and analysed on the fly or managed by several people with different or missing perceptions of organizing data (the latter is a frequent case when people leave and must be replaced). Difficulties to find data are aggravated by the existence of duplicated sample names and lack of recorded metadata.
 
-Alternatively, we suggest a structured and hierarchical organisation that reflects the way in which sequencing data are generated and analyzed. First, **raw data** (i.e. FASTQ files) are processed sample-wise with relatively standard but tunable analysis pipelines (“core analysis pipelines” in the figure above) which generate a variety of directories and files. In a second step, **processed data** from one or more samples are combined to perform downstream analyses and produce the **analysis results**.
+Alternatively, we suggest a structured and hierarchical organisation that reflects the way in which sequencing data are generated and analyzed. First, **raw data** (i.e. FASTQ files) are processed sample-wise with relatively standard but tunable analysis pipelines (“core analysis pipelines” in the figure below) which generate a variety of directories and files. In a second step, **processed data** from one or more samples are combined to perform downstream analyses and produce the **analysis results**.
 
 ![stages_hts_data](https://github.com/4DGenome/parallel_sequencing_lives/blob/master/figures/stages_hts_data.png)
 
@@ -215,7 +215,7 @@ de317ed0e4ffe8ecb082b20600abb72ad5450c64  /users/GR/mb/jquilez/projects/parallel
 
 As shown above, the `*.sha` file contains alphanumerical text strings associated to key files used in the pipeline (e.g. input FASTQs, genome reference sequece), which can be used to assess the integtity of such files.
 
-Note that many of the paths include `hg38_mmtv`. This not only is informative about the version of the human genome used to process the data but also allows to accommodate variations in the analysis pipelines without over-writting existing data. With the corresponding changes in the Hi-C pipeline, `b1913e6c1_51720e9cf` can be re-processed on `hg19` and the output of the pipeline will be stored in _parallel_ paths. This can be extended to other variables such as the aligner used, etc.
+Note that many of the paths above include `hg38_mmtv`. This not only is informative about the version of the human genome used to process the data but also allows to accommodate variations in the analysis pipelines without over-writting existing data. With the corresponding changes in the Hi-C pipeline, `b1913e6c1_51720e9cf` can be re-processed on `hg19` and the output of the pipeline will be stored in _parallel_ paths. This can be extended to other variables such as the aligner used, etc.
 
 
 ### (3) Analysis results
@@ -226,7 +226,7 @@ When one has to perform an analysis some basic questions arise: for what/who is 
 
 Firstly, we found convenient allocating a directory for each of the users who requests an analysis, especially when there are many of them. While saving the downstream analyses grouped by projects is also a sensible option, this may be straightforward only for analyses under the umbrella of a well-defined broad project. Moreover, very often the name initially given to a project when its directory is created may become imprecise as the project evolves, analyses are unrelated to any existing project or a given analysis is used in many projects.
 
-For instance, all the analyses generated for the [manuscript]()~~link to manuscript~~ and the didactic dataset are allocated in the `projects/jquilez/analysis` directory, which was generated with:
+For instance, all the analyses generated for the [manuscript]()~~link to manuscript~~ and this didactic dataset are allocated in the `projects/jquilez/analysis` directory, which was generated with:
 ```bash
 scripts/utils/make_project_directory.sh jquilez
 ```
@@ -239,10 +239,26 @@ projects/jquilez/analysis/2017-06-29_process_hic_samples
 
 And each of the analysis directories includes well-defined subdirectories for data, figures, scripts, etc.
 
-Importantly, this structured and hierarchical organisation of the data facilitates both humand and computer searches.
+Importantly, this structured and hierarchical organisation of the data facilitates both humand and computer searches. As an example, the command below allows quickly checking that the trimming step of the pipeline completed successfully for all Hi-C samples:
+```bash
+cat data/hic/*/*/logs/*trim_reads_trimmomatic_paired_end.log |grep "Completed successfully"
+``` 
 
 
+<br>
 
 ## Automation of analysis pipelines
 
-Analysing HTS data is hardly ever a one-time task. Samples are often sequenced at different time points (Fig. 1b) so core analysis pipelines have to be executed for every new sequencing batch. Also, samples may need to be re-processed when analysis pipelines are modified substantially (for instance, by including new programs or changing key parameter values) to ensure that data from different samples are comparable in the downstream analysis. At the downstream level, repeating analyses with different datasets or variables, just to name a few variations, is a common task. We therefore identified four desired features for the code used in the analysis.
+Analysing HTS data is hardly ever a one-time task. Samples are often sequenced at different time points so core analysis pipelines have to be executed for every new sequencing batch. Also, samples may need to be re-processed when analysis pipelines are modified substantially (for instance, by including new programs or changing key parameter values) to ensure that data from different samples are comparable in the downstream analysis. At the downstream level, repeating analyses with different datasets or variables, just to name a few variations, is a common task. We therefore identified four desired features for the code used in the analysis.
+
+![automation_pipelines](https://github.com/4DGenome/parallel_sequencing_lives/blob/master/figures/automation_pipelines.png)
+
+### Scalability
+
+Firstly, it needs to be scalable, that is, effortlessly executed for a single sample or for hundreds. For instance, the single command:
+```bash
+scripts/pipelines/hic-16.05/hic_submit.sh scripts/pipelines/hic-16.05/hic.config
+```
+launches the [`hic-16.05`](https://github.com/4DGenome/parallel_sequencing_lives/tree/master/scripts/pipelines/hic-16.05) Hi-C pipeline in all the samples in the [`hic.config`](https://github.com/4DGenome/parallel_sequencing_lives/blob/master/scripts/pipelines/hic-16.05/hic.config) file.
+
+Processing hundreds of samples sequentially is impractical so, secondly, code has to be parallelizable to exploit multi-core computing architectures to process multiple samples simultaneously and speed up the individual steps within the analysis. Third, automatic configuration of the variable values is necessary so that these need not to be set for each sample. Finally, we found very convenient breaking down analysis pipelines into modules that can be executed individually. In Additional file 1: Fig. S5 we show how such features can be incorporated. Briefly, (i) scalability is achieved by having a submission script that generates as many pipeline scripts as samples in a configuration file; (ii) parallelisation is obtained by submitting each sample pipeline script as an independent job in the computing cluster, if there is one, and adapting the pipeline code to be suitable for running in multiple processors; (iii) each pipeline script is automatically configured by retrieving the pipeline variable values (e.g. species, read length) from the metadata SQL database; and (iv) the pipeline code is grouped into modules that can be executed all sequentially or individually by specifying it in the configuration file. More details about the implementation can be found in the Didactic dataset.
