@@ -12,6 +12,8 @@ In ["Parallel sequencing lives, or what makes large sequencing projects successf
 - [Sample identification](#sample-identification)
 - [Structured and hierarchical data organisation](#structured-and-hierarchical-data-organisation)
 - [Automation of analysis pipelines](#automation-of-analysis-pipelines)
+- [Documentation](#documentation)
+
 
 <br>
 
@@ -261,4 +263,88 @@ scripts/pipelines/hic-16.05/hic_submit.sh scripts/pipelines/hic-16.05/hic.config
 ```
 launches the [`hic-16.05`](https://github.com/4DGenome/parallel_sequencing_lives/tree/master/scripts/pipelines/hic-16.05) Hi-C pipeline in all the samples in the [`hic.config`](https://github.com/4DGenome/parallel_sequencing_lives/blob/master/scripts/pipelines/hic-16.05/hic.config) file.
 
-Processing hundreds of samples sequentially is impractical so, secondly, code has to be parallelizable to exploit multi-core computing architectures to process multiple samples simultaneously and speed up the individual steps within the analysis. Third, automatic configuration of the variable values is necessary so that these need not to be set for each sample. Finally, we found very convenient breaking down analysis pipelines into modules that can be executed individually. In Additional file 1: Fig. S5 we show how such features can be incorporated. Briefly, (i) scalability is achieved by having a submission script that generates as many pipeline scripts as samples in a configuration file; (ii) parallelisation is obtained by submitting each sample pipeline script as an independent job in the computing cluster, if there is one, and adapting the pipeline code to be suitable for running in multiple processors; (iii) each pipeline script is automatically configured by retrieving the pipeline variable values (e.g. species, read length) from the metadata SQL database; and (iv) the pipeline code is grouped into modules that can be executed all sequentially or individually by specifying it in the configuration file. More details about the implementation can be found in the Didactic dataset.
+### Parallelization
+
+Processing hundreds of samples sequentially is impractical so, secondly, code has to be parallelizable to exploit multi-core computing architectures to process multiple samples simultaneously and speed up the individual steps within the analysis.
+
+[`hic.config`](https://github.com/4DGenome/parallel_sequencing_lives/blob/master/scripts/pipelines/hic-16.05/hic.config) allows configuring whether the samples pipeline scripts:
+```
+ll scripts/pipelines/hic-16.05/job_cmd
+```
+are executed sequentially or submitted to the queuing system of a computing cluster as well as the cluster options (memory and time allocated, number of nodes, etc).
+
+_Note that parallelization of [`hic-16.05`](https://github.com/4DGenome/parallel_sequencing_lives/tree/master/scripts/pipelines/hic-16.05) is implemented for [this type] of cluster._
+
+Moreover, the pipeline code in [`hic.sh`](https://github.com/4DGenome/parallel_sequencing_lives/blob/master/scripts/pipelines/hic-16.05/hic.sh) is adapted to use the specified number of nodes, if possible.
+
+### Automatic configuration
+
+Automatic configuration of the variable values such as species or read length is necessary so that these need not to be set for each sample. Each pipeline script retrieves the required variable values from `metadata/metadata.db` through the `scripts/utils/io_metadata.sh` (see above).
+
+### Modularity
+
+The pipeline code in [`hic.sh`](https://github.com/4DGenome/parallel_sequencing_lives/blob/master/scripts/pipelines/hic-16.05/hic.sh) 
+is grouped into modules that can be executed all sequentially or individually by specifying it in [`hic.config`](https://github.com/4DGenome/parallel_sequencing_lives/blob/master/scripts/pipelines/hic-16.05/hic.config). See the [README](https://github.com/4DGenome/parallel_sequencing_lives/tree/master/scripts/pipelines/hic-16.05) of `hic-16.05` for more information on the modules available.
+
+
+<br>
+
+## Documentation
+
+From the moment HTS data are generated, they go through several procedures (e.g. compression, alignment, statistical analysis) that will eventually generate results, typically in the form of text, tables and figures. Very often the details of how these are generated are absent or vaguely documented, which may result in little understanding of the results, irreproducibility and hampers the identification of errors.
+
+On the contrary, we recommend to document as much as possible all the parts involved in the analysis and here provide some tips for doing so.
+
+1. Write in README files how and when software and accessory files (e.g. genome reference sequence, annotation) are obtained. As an example:
+
+```
+# 2016-01-14: Download hg38 full dataset from UCSC Genome Browser
+# -------------------------------------------------------------------------------------
+
+# Download from UCSC's FTP
+INDIR="//hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/"
+OUTDIR="$HOME/assemblies/homo_sapiens/hg38/ucsc"
+mkdir -p $OUTDIR
+rsync -a -P rsync:$INDIR $OUTDIR
+# Untar and uncompress FASTA files
+FASTA=$OUTDIR/chromFa
+mkdir -p $FASTA
+tar -zxvf $OUTDIR/hg38.chromFa.tar.gz
+mv ./chroms/*.fa $FASTA
+rm -rf ./chroms
+# Concatenate chromosome FASTA files into a single one (only for autosomes plus chrX)
+chroms="chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX"
+ofasta=$OUTDIR/hg38.fa
+rm -f $ofasta
+for c in $chroms; do
+        cat $FASTA/$c.fa >> $ofasta
+done
+# Check the resulting file
+cat $ofasta | grep ">"
+```
+
+2. Allocate a directory for virtually any task, as shown in:
+```
+projects/jquilez/analysis/2017-04-07_analyses_manuscript
+projects/jquilez/analysis/2017-06-29_process_hic_samples
+```
+
+3. Code core analysis pipeline to log the output of the programs and verify files integrity (see [Structured and hierarchical data organisation](#structured-and-hierarchical-data-organisation))e.g. hg19).
+
+4. Document procedures using [Markdown](https://daringfireball.net/projects/markdown/), [Jupyter Notebooks](http://jupyter.org/), [RStudio](https://www.rstudio.com/) or alike.
+
+5. Specify the non-default variable values that are used. For instance, the file documenting the how Hi-C samples were processed:
+```
+projects/jquilez/analysis/2017-06-29_process_hic_samples/2017-06-29_process_hic_samples.md
+```
+contains:
+- the variable values passed to the script that performed the quality control of the raw reads (`scripts/utils/quality_control.sh`)
+- a copy of the configuration file used to run the `hic-16.05` Hi-C pipeline.
+
+In this way there is an exact record of the parameter values used in the analysis.
+
+
+<br>
+
+
+
