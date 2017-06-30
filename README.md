@@ -295,7 +295,9 @@ From the moment HTS data are generated, they go through several procedures (e.g.
 
 On the contrary, we recommend to document as much as possible all the parts involved in the analysis and here provide some tips for doing so.
 
-1. Write in README files how and when software and accessory files (e.g. genome reference sequence, annotation) are obtained. As an example:
+**Write in README files how and when software and accessory files (e.g. genome reference sequence, annotation) are obtained**
+
+As an example:
 
 ```
 # 2016-01-14: Download hg38 full dataset from UCSC Genome Browser
@@ -323,17 +325,23 @@ done
 cat $ofasta | grep ">"
 ```
 
-2. Allocate a directory for virtually any task, as shown in:
+**Allocate a directory for virtually any task**
+
+As shown in:
 ```
 projects/jquilez/analysis/2017-04-07_analyses_manuscript
 projects/jquilez/analysis/2017-06-29_process_hic_samples
 ```
 
-3. Code core analysis pipeline to log the output of the programs and verify files integrity (see [Structured and hierarchical data organisation](#structured-and-hierarchical-data-organisation))e.g. hg19).
+**Code core analysis pipeline to log the output of the programs and verify files integrity**
 
-4. Document procedures using [Markdown](https://daringfireball.net/projects/markdown/), [Jupyter Notebooks](http://jupyter.org/), [RStudio](https://www.rstudio.com/) or alike.
+See [Structured and hierarchical data organisation](#structured-and-hierarchical-data-organisation))e.g. hg19).
 
-5. Specify the non-default variable values that are used. For instance, the file documenting the how Hi-C samples were processed:
+**Document procedures using [Markdown](https://daringfireball.net/projects/markdown/), [Jupyter Notebooks](http://jupyter.org/), [RStudio](https://www.rstudio.com/) or alike**
+
+**Specify the non-default variable values that are used**
+
+For instance, the file documenting the how Hi-C samples were processed:
 ```
 projects/jquilez/analysis/2017-06-29_process_hic_samples/2017-06-29_process_hic_samples.md
 ```
