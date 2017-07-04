@@ -18,8 +18,6 @@ In ["Parallel sequencing lives, or what makes large sequencing projects successf
 	- [(1) Raw data](#1-raw-data)
 	- [(2) Processed data](#2-processed-data)
 	- [(3) Analysis results](#3-analysis-results)
-	- [](#)
-	- [](#)
 - [Automation of analysis pipelines](#automation-of-analysis-pipelines)
 	- [Scalability](#scalability)
 	- [Parallelization](#parallelization)
@@ -27,7 +25,6 @@ In ["Parallel sequencing lives, or what makes large sequencing projects successf
 	- [Modularity](#modularity)
 - [Interactive web application](#interactive-web-application)
 - [Documentation](#documentation)
-
 
 <br>
 
