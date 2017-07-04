@@ -7,6 +7,7 @@ In ["Parallel sequencing lives, or what makes large sequencing projects successf
 
 ## Table of Contents
 - [Installation and usage](#installation-and-usage)
+- [Dependencies](#dependencies)
 - [Metadata](#metadata)
 	- [Metadata collection](#metadata-collection)
 	- [Metadata SQL database](#metadata-sql-database)
@@ -48,6 +49,26 @@ for s in scripts/*/*.sh; do
 	sed -i "s/$IDIR/$TARGET_DIR/g" $s
 done
 ```
+
+
+<br>
+
+## Dependencies
+
+- wget
+- Python and its packages:
+	- os
+	- sys
+	- dataset
+	- pandas
+	- numpy
+	- collections
+	- glob
+	- time
+	- datetime
+	- hashlib
+- FastQC
+- unzip
 
 
 <br>

@@ -8,7 +8,7 @@
 # Goal: makes directory for analysis within the project directory
 #==================================================================================================
 
-PSL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PSL=/users/GR/mb/jquilez/projects/parallel_sequencing_lives
 
 # variables
 sample_id=$1
