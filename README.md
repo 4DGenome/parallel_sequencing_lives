@@ -55,7 +55,9 @@ done
 
 ## Dependencies
 
-- wget
+- bgzip
+- FastQC
+- java
 - Python and its packages:
 	- os
 	- sys
@@ -67,8 +69,12 @@ done
 	- time
 	- datetime
 	- hashlib
-- FastQC
+- samtools
+- shasum
+- tabix
+- trimmomatic
 - unzip
+- wget
 
 
 <br>
