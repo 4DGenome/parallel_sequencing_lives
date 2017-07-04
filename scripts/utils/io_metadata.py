@@ -94,4 +94,31 @@ elif mode == "print_freeze":
 		print 'making freeze for table %s' % t
 		otab = '%s/%s.csv' % (ODIR, t)
 		result = db[t].all()
-		dataset.freeze(result, format = 'csv', filename = otab)	
+		dataset.freeze(result, format = 'csv', filename = otab)
+
+elif mode == "add_to_metadata":
+
+	# get variables
+	table = sys.argv[3]
+	sample_id = sys.argv[4]
+	time_stamp = sys.argv[5]
+	attribute = sys.argv[6]
+	value = sys.argv[7]
+	my_key = ";".join([sample_id, time_stamp])
+
+	# important: because this script may be used in parallel, with many instances trying to access to the data
+	# do not use transactions (e.g. db.begin(), db.commit()...) as these do not allow multiple writings to the database
+
+	# hic table stores the most recent values
+	tab = db.get_table(table, primary_id = 'SAMPLE_ID', primary_type = 'String')
+ 	new_data = {}
+ 	new_data['SAMPLE_ID'] = sample_id
+ 	new_data[attribute] = value
+ 	tab.upsert(new_data, ['SAMPLE_ID'])
+
+ 	# jobs table stores all values from different jobs
+	tab = db.get_table('jobs', primary_id = 'JOB_ID', primary_type = 'String')
+ 	new_data = {}
+ 	new_data['JOB_ID'] = my_key
+ 	new_data[attribute] = value
+ 	tab.upsert(new_data, ['JOB_ID'])

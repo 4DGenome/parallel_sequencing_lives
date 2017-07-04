@@ -8,10 +8,24 @@ In ["Parallel sequencing lives, or what makes large sequencing projects successf
 ## Table of Contents
 - [Installation and usage](#installation-and-usage)
 - [Metadata](#metadata)
+	- [Metadata collection](#metadata-collection)
+	- [Metadata SQL database](#metadata-sql-database)
+	- [Extract metadata](#extract-metadata)
+	- [Print freeze](#print-freeze)
 - [Sequencing index concordance](#sequencing-index-concordance)
 - [Sample identification](#sample-identification)
 - [Structured and hierarchical data organisation](#structured-and-hierarchical-data-organisation)
+	- [(1) Raw data](#1-raw-data)
+	- [(2) Processed data](#2-processed-data)
+	- [(3) Analysis results](#3-analysis-results)
+	- [](#)
+	- [](#)
 - [Automation of analysis pipelines](#automation-of-analysis-pipelines)
+	- [Scalability](#scalability)
+	- [Parallelization](#parallelization)
+	- [Automatic configuration](#automatic-configuration)
+	- [Modularity](#modularity)
+- [Interactive web application](#interactive-web-application)
 - [Documentation](#documentation)
 
 
@@ -289,6 +303,23 @@ is grouped into modules that can be executed all sequentially or individually by
 
 <br>
 
+## Interactive web application
+
+HTS analysis workflows generate a great number of files; for instance, Processing `b1913e6c1_51720e9cf` generates many files:
+```bash
+tree data/hic/samples/b1913e6c1_51720e9cf
+```
+However, such files can be useless for some users, if for instance they do not have access to the computer where the data are stored, files are too big to be opened with text editors and/or users lack the skills to manipulate them with the right tools (e.g. Unix, [BEDtools](http://bedtools.readthedocs.io/en/latest/), [SAMtools](http://samtools.sourceforge.net/)). Even if this is not the case, as the number of samples increases, better ways to visualize the data than inspecting files individually are essential.
+
+Therefore, we suggest to implement interactive web applications that display the processed data and allow performing specific analyses in a user-friendly manner. As an example, we take advantage of our structured and hierarchical data organisation as well as the available metadata to deploy a web application to visualise processed Hi-C data using [Shiny](https://shiny.rstudio.com/).
+
+![hisee](https://github.com/4DGenome/parallel_sequencing_lives/blob/master/figures/hisee.png)
+
+We recommend defining the specific features of such web applications with their potential users, because implementing them requires effort and attempting to comprehend unnecessary functions may lead to a loss of time.
+
+
+<br>
+
 ## Documentation
 
 From the moment HTS data are generated, they go through several procedures (e.g. compression, alignment, statistical analysis) that will eventually generate results, typically in the form of text, tables and figures. Very often the details of how these are generated are absent or vaguely documented, which may result in little understanding of the results, irreproducibility and hampers the identification of errors.
@@ -337,7 +368,7 @@ projects/jquilez/analysis/2017-06-29_process_hic_samples
 ```
 projects/jquilez/analysis/2017-06-29_process_hic_samples/2017-06-29_process_hic_samples.md
 ```
-contains:
+The file above contains:
 - the variable values passed to the script that performed the quality control of the raw reads (`scripts/utils/quality_control.sh`)
 - a copy of the configuration file used to run the `hic-16.05` Hi-C pipeline.
 

@@ -1,0 +1,6 @@
+a5cc3caeb22851b86ccd27c1f17939b4c481c673  /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/raw/2016-02-11/b7fa2d8db_bfac48760_read1.fastq
+a6d4895f0d01501fb6a56263f24da4247482aa2e  /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/raw/2016-02-11/b7fa2d8db_bfac48760_read2.fastq
+b6555b89d766d2fc118eebb79b99da0d5ecd4bf4  /users/GR/mb/jquilez/assemblies/mus_musculus/mm10/ucsc/mm10_chr1-19XYM.fa
+0012e9ab3b0bebdbfe433c37d6179e8f955943fb  /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/samples/b7fa2d8db_bfac48760/results/mm10/processed_reads/b7fa2d8db_bfac48760_both_map.tsv
+88425fc79902c669f8bed6f1a37289ab64196b35  /users/GR/mb/jquilez/projects/parallel_sequencing_lives/data/hic/samples/b7fa2d8db_bfac48760/results/mm10/filtered_reads/b7fa2d8db_bfac48760_filtered_map.tsv
+9af6e87054d4c4eae50218e76e6387c4c944ef54  /users/project/4DGenome/data/hic/samples/b7fa2d8db_bfac48760/results/mm10/processed_reads/b7fa2d8db_bfac48760_both_map.bam.sam

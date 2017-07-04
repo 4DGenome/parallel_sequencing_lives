@@ -88,6 +88,15 @@ main() {
 			message_info "-s <sample_id>, -t <table> and/or -a <attribute> are not provided; exiting..."
 			exit
 		fi
+
+	elif [[ $mode == "add_to_metadata" ]]; then
+		if [[ -n $table && -n $sample_id && -n $time_stamp && -n $attribute && -n $value ]]; then
+			python $io_metadata $db 'add_to_metadata' $table $sample_id $time_stamp $attribute $value
+		else
+			message_info "-t <table>, -s <sample_id>, -u <time_stamp> -a <attribute> and or -v <value> are not provided; exiting..."
+			message_info "t=$table s=$sample_id u=$time_stamp a=$attribute v=$value"
+			exit
+		fi
 	
 	elif [[ $mode == "print_freeze" ]]; then
 		python $io_metadata $db print_freeze $PSL
