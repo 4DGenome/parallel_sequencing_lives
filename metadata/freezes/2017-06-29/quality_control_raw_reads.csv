@@ -1,2 +1,0 @@
-SAMPLE_ID,READ1_PATH_FASTQC_REPORT,READ2_PATH_FASTQC_REPORT
-dc3a1e069_51720e9cf,/users/GR/mb/jquilez/projects/didactic_dataset/data/*/raw/*/fastqc/dc3a1e069_51720e9cf*read1_fastqc/fastqc_data.txt,/users/GR/mb/jquilez/projects/didactic_dataset/data/*/raw/*/fastqc/dc3a1e069_51720e9cf*read2_fastqc/fastqc_data.txt
