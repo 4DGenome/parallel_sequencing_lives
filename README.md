@@ -44,7 +44,7 @@ head -n 12 scripts/utils/check_sequencing_index_concordance.sh
 The scripts are written so that they can be executed from the directory where the repository is cloned by conveniently changing the `$PSL` value, which can be achieved for all scripts with:
 ```bash
 TARGET_DIR=my_home_directory
-for s in scripts/*/*.sh; do
+for s in `find scripts -name "*.sh"`; do
 	IDIR='\/users\/GR\/mb\/jquilez\/projects\/parallel_sequencing_lives'
 	sed -i "s/$IDIR/$TARGET_DIR/g" $s
 done
