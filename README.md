@@ -58,17 +58,11 @@ done
 - bgzip
 - FastQC
 - java
-- Python and its packages:
-	- os
-	- sys
+- Python 2.7 and its packages:
 	- dataset
 	- pandas
 	- numpy
-	- collections
-	- glob
-	- time
 	- datetime
-	- hashlib
 - samtools
 - shasum
 - tabix
