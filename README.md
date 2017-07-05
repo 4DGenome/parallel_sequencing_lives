@@ -66,6 +66,7 @@ done
 - samtools
 - shasum
 - tabix
+- tree
 - trimmomatic
 - unzip
 - wget
