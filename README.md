@@ -52,6 +52,11 @@ for s in `find scripts -name "*.sh"`; do
 done
 ```
 
+Also, keep in mind that your Unix user needs execution permissions on the scripts; for instance:
+```
+chmod a+x scripts/utils/*
+```
+
 
 <br>
 
