@@ -73,6 +73,7 @@ chmod a+x scripts/utils/*
 - samtools
 - shasum
 - tabix
+- tadbit
 - tree
 - trimmomatic
 - unzip
