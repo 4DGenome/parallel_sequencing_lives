@@ -1,6 +1,6 @@
 # Didactic dataset
 
-In ["Parallel sequencing lives, or what makes large sequencing projects successful"]() ~~update the name of the manuscript and the link~~ we used the life of `b1913e6c1_51720e9cf`, a Hi-C sample, to (i) illustrate the challanges posed by the management and analysis of high-throughput sequencing (HTS) samples and (ii) propose best-practices for doing it successfully. Here we further illustrate these recommendations with a didactic dataset of 4 Hi-C samples (including `b1913e6c1_51720e9cf`).
+In ["Parallel sequencing lives, or what makes large sequencing projects successful"](https://academic.oup.com/gigascience/article/6/11/1/4557140) we used the life of `b1913e6c1_51720e9cf`, a Hi-C sample, to (i) illustrate the challanges posed by the management and analysis of high-throughput sequencing (HTS) samples and (ii) propose best-practices for doing it successfully. Here we further illustrate these recommendations with a didactic dataset of 4 Hi-C samples (including `b1913e6c1_51720e9cf`).
 
 
 <br>
